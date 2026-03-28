@@ -20,7 +20,7 @@ file mkdir $PROJ_DIR
 
 # ── Create project ────────────────────────────────────────────
 create_project $PROJ_NAME $PROJ_DIR -part $PART
-set_property board_part tul.com.tw:pynq-z2:part0:1.0 [current_project]
+# set_property board_part tul.com.tw:pynq-z2:part0:1.0 [current_project]
 set_property target_language Verilog [current_project]
 
 # ── Add original RTL sources (from parent directory) ─────────

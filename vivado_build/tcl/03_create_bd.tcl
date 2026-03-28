@@ -28,13 +28,44 @@ apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
     -config {make_external "FIXED_IO, DDR"} \
     [get_bd_cells processing_system7_0]
 
+# ── Configure PS7 manually for PYNQ-Z2 (MIO, DDR3, Clocks) ─────
+# These parameters ensure the board boots and works without official board files.
 set_property -dict [list \
-    CONFIG.PCW_USE_S_AXI_HP0          {1}      \
-    CONFIG.PCW_S_AXI_HP0_DATA_WIDTH   {64}     \
-    CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100}  \
-    CONFIG.PCW_USE_FABRIC_INTERRUPT    {1}      \
-    CONFIG.PCW_IRQ_F2P_INTR            {1}      \
-    CONFIG.PCW_EN_CLK0_PORT            {1}      \
+    CONFIG.PCW_UIPARAM_DDR_PARTNO      {MT41K256M16 RE-125} \
+    CONFIG.PCW_UIPARAM_DDR_BUS_WIDTH   {16 Bit} \
+    CONFIG.PCW_UIPARAM_DDR_BL          {8} \
+    CONFIG.PCW_UIPARAM_DDR_MEMORY_TYPE {DDR 3} \
+    CONFIG.PCW_PCAP_PERIPHERAL_FREQMHZ {200} \
+    CONFIG.PCW_PRESET_BANK0_VOLTAGE    {LVCMOS 3.3V} \
+    CONFIG.PCW_PRESET_BANK1_VOLTAGE    {LVCMOS 1.8V} \
+    CONFIG.PCW_USE_S_AXI_HP0           {1} \
+    CONFIG.PCW_S_AXI_HP0_DATA_WIDTH    {64} \
+    CONFIG.PCW_EN_CLK0_PORT            {1} \
+    CONFIG.PCW_FPGA0_PERIPHERAL_FREQMHZ {100} \
+    CONFIG.PCW_EN_UART0                {1} \
+    CONFIG.PCW_UART0_PERIPHERAL_ENABLE {1} \
+    CONFIG.PCW_UART0_UART0_IO          {MIO 14 .. 15} \
+    CONFIG.PCW_EN_ENET0                {1} \
+    CONFIG.PCW_ENET0_PERIPHERAL_ENABLE {1} \
+    CONFIG.PCW_ENET0_ENET0_IO          {MIO 16 .. 27} \
+    CONFIG.PCW_ENET0_GRP_MDIO_ENABLE   {1} \
+    CONFIG.PCW_ENET0_GRP_MDIO_IO       {MIO 52 .. 53} \
+    CONFIG.PCW_EN_USB0                 {1} \
+    CONFIG.PCW_USB0_PERIPHERAL_ENABLE  {1} \
+    CONFIG.PCW_USB0_USB0_IO            {MIO 28 .. 39} \
+    CONFIG.PCW_EN_SDIO0                {1} \
+    CONFIG.PCW_SD0_PERIPHERAL_ENABLE   {1} \
+    CONFIG.PCW_SD0_SD0_IO              {MIO 40 .. 45} \
+    CONFIG.PCW_SD0_GRP_CD_ENABLE       {1} \
+    CONFIG.PCW_SD0_GRP_CD_IO           {MIO 47} \
+    CONFIG.PCW_EN_GPIO                 {1} \
+    CONFIG.PCW_GPIO_MIO_GPIO_ENABLE    {1} \
+    CONFIG.PCW_QSPI_PERIPHERAL_ENABLE  {1} \
+    CONFIG.PCW_QSPI_QSPI_IO            {MIO 1 .. 6} \
+    CONFIG.PCW_QSPI_GRP_FBCLK_ENABLE   {1} \
+    CONFIG.PCW_QSPI_GRP_FBCLK_IO       {MIO 8} \
+    CONFIG.PCW_USE_FABRIC_INTERRUPT    {1} \
+    CONFIG.PCW_IRQ_F2P_INTR            {1} \
 ] [get_bd_cells processing_system7_0]
 
 # ─────────────────────────────────────────────────────────────
