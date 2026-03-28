@@ -173,10 +173,10 @@ connect_bd_intf_net [get_bd_intf_pins axi_sc_hp0/M00_AXI] \
 
 # AXI-Stream: DMA MM2S → mm_eval input (PS sends data to PL)
 connect_bd_intf_net [get_bd_intf_pins axi_dma_0/M_AXIS_MM2S] \
-    [get_bd_intf_pins mm_eval/x_AXIS]
+    [get_bd_intf_pins mm_eval/x]
 
 # AXI-Stream: mm_eval output → DMA S2MM (PL sends result to PS)
-connect_bd_intf_net [get_bd_intf_pins mm_eval/y_AXIS] \
+connect_bd_intf_net [get_bd_intf_pins mm_eval/y] \
     [get_bd_intf_pins axi_dma_0/S_AXIS_S2MM]
 
 # fault_detected → GPIO input
