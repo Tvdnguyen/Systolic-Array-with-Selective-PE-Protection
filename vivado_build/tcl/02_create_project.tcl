@@ -75,8 +75,8 @@ set_property -dict [list \
     CONFIG.Write_Depth_A        $bram_depth              \
     CONFIG.Write_Width_B        {32}                     \
     CONFIG.Read_Width_B         {32}                     \
-    CONFIG.Enable_A             {Always_Enabled}         \
-    CONFIG.Enable_B             {Always_Enabled}         \
+    CONFIG.Enable_A             {Use_ENA_Pin}            \
+    CONFIG.Enable_B             {Use_ENB_Pin}            \
     CONFIG.Register_PortA_Output_of_Memory_Primitives {false} \
     CONFIG.Register_PortB_Output_of_Memory_Primitives {false} \
     CONFIG.Use_RSTA_Pin         {false}                  \
