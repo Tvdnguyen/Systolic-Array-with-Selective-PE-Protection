@@ -131,6 +131,8 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset:5.0 proc_sys_reset_0
 # 8. Connect clocks (FCLK_CLK0 feeds everything)
 # ─────────────────────────────────────────────────────────────
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] \
+    [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK]   \
+    [get_bd_pins processing_system7_0/S_AXI_HP0_ACLK]   \
     [get_bd_pins axi_dma_0/s_axi_lite_aclk]             \
     [get_bd_pins axi_dma_0/m_axi_mm2s_aclk]             \
     [get_bd_pins axi_dma_0/m_axi_s2mm_aclk]             \
