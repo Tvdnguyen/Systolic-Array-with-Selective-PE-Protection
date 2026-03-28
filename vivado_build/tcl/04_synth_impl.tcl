@@ -11,6 +11,10 @@ set OUT_DIR    "$BUILD_DIR/output"
 file mkdir $OUT_DIR
 
 # ── Synthesis ─────────────────────────────────────────────────
+# Reset run if it already exists to ensure Top module change is picked up
+if {[get_runs -quiet synth_1] != ""} {
+    reset_run synth_1
+}
 puts "  [clock format [clock seconds] -format {%H:%M:%S}]  Launching synthesis..."
 launch_runs synth_1 -jobs 4
 wait_on_run synth_1

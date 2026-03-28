@@ -200,11 +200,13 @@ assign_bd_address
 validate_bd_design
 save_bd_design
 
-# ─────────────────────────────────────────────────────────────
-# 12. Generate HDL wrapper and set as top
-# ─────────────────────────────────────────────────────────────
-set wrapper [make_wrapper -files [get_files ${BD_NAME}.bd] -top]
-add_files -norecurse $wrapper
+# ── Generate HDL wrapper and set as Top ───────────────────────
+set bd_file [get_files -all -filter {NAME =~ "*pynq_z2_system.bd"}]
+if {$bd_file eq ""} {
+    error "ERROR: Could not find Block Design file (pynq_z2_system.bd)"
+}
+set wrapper_file [make_wrapper -files $bd_file -top]
+add_files -norecurse $wrapper_file
 set_property top ${BD_NAME}_wrapper [current_fileset]
 update_compile_order -fileset sources_1
 
