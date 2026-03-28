@@ -11,7 +11,10 @@ set OUT_DIR    "$BUILD_DIR/output"
 file mkdir $OUT_DIR
 
 # ── Synthesis ─────────────────────────────────────────────────
-# Reset run if it already exists to ensure Top module change is picked up
+# Ensure correct top module before synthesis
+set_property top pynq_z2_system_wrapper [current_fileset]
+update_compile_order -fileset sources_1
+
 if {[get_runs -quiet synth_1] != ""} {
     reset_run synth_1
 }

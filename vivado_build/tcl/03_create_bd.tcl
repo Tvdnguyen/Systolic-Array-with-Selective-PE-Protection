@@ -24,9 +24,12 @@ set M $DESIGN_N
 # ─────────────────────────────────────────────────────────────
 create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
 
-apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
-    -config {make_external "FIXED_IO, DDR"} \
-    [get_bd_cells processing_system7_0]
+# ── Create external ports for PS7 (Manual since no board files) ──
+create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR
+create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO
+
+connect_bd_intf_net [get_bd_intf_pins processing_system7_0/DDR] [get_bd_intf_ports DDR]
+connect_bd_intf_net [get_bd_intf_pins processing_system7_0/FIXED_IO] [get_bd_intf_ports FIXED_IO]
 
 # ── Configure PS7 manually for PYNQ-Z2 (MIO, DDR3, Clocks) ─────
 # These parameters ensure the board boots and works without official board files.
@@ -90,6 +93,8 @@ set_property -dict [list \
 # ─────────────────────────────────────────────────────────────
 # 3. mm_protected_axi (our systolic array, added as RTL module)
 # ─────────────────────────────────────────────────────────────
+# Force Vivado to re-index all source files so it can resolve mm_protected_axi
+update_compile_order -fileset sources_1
 create_bd_cell -type module -reference mm_protected_axi mm_eval
 
 set_property -dict [list \
@@ -201,13 +206,12 @@ validate_bd_design
 save_bd_design
 
 # ── Generate HDL wrapper and set as Top ───────────────────────
-set bd_file [get_files -all -filter {NAME =~ "*pynq_z2_system.bd"}]
-if {$bd_file eq ""} {
-    error "ERROR: Could not find Block Design file (pynq_z2_system.bd)"
-}
+set bd_file [get_files pynq_z2_system.bd]
+generate_target all $bd_file
 set wrapper_file [make_wrapper -files $bd_file -top]
 add_files -norecurse $wrapper_file
-set_property top ${BD_NAME}_wrapper [current_fileset]
+
+set_property top pynq_z2_system_wrapper [current_fileset]
 update_compile_order -fileset sources_1
 
 puts "  ✓ Block Design created: $BD_NAME"

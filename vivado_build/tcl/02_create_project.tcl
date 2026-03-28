@@ -48,6 +48,7 @@ set rtl_files [list \
 ]
 
 add_files $rtl_files
+update_compile_order -fileset sources_1
 
 # ── Add generated systolic_protected.sv ──────────────────────
 set gen_file "$BUILD_DIR/generated/systolic_protected.sv"
@@ -87,8 +88,8 @@ generate_target all [get_ips blk_mem_gen_0]
 # ── Add XDC constraints ───────────────────────────────────────
 add_files -fileset constrs_1 "$BUILD_DIR/constraints/pynq_z2.xdc"
 
-# ── Set top (used for RTL simulation; Block Design sets its own top) ────
-set_property top mm_protected_axi [current_fileset]
+# ── Ensure compile order is up to date ────────────────────────
+update_compile_order -fileset sources_1
 
 puts "  ✓ Project created at: $PROJ_DIR"
 puts "    Part: $PART  |  BRAM depth: $bram_depth  |  N=$N  M=$M"
