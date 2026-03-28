@@ -24,12 +24,9 @@ set M $DESIGN_N
 # ─────────────────────────────────────────────────────────────
 create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
 
-# ── Create external ports for PS7 (Manual since no board files) ──
-create_bd_intf_port -mode Master -vlnv xilinx.com:interface:ddrx_rtl:1.0 DDR
-create_bd_intf_port -mode Master -vlnv xilinx.com:display_processing_system7:fixedio_rtl:1.0 FIXED_IO
-
-connect_bd_intf_net [get_bd_intf_pins processing_system7_0/DDR] [get_bd_intf_ports DDR]
-connect_bd_intf_net [get_bd_intf_pins processing_system7_0/FIXED_IO] [get_bd_intf_ports FIXED_IO]
+apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 \
+    -config {make_external "FIXED_IO, DDR"} \
+    [get_bd_cells processing_system7_0]
 
 # ── Configure PS7 manually for PYNQ-Z2 (MIO, DDR3, Clocks) ─────
 # These parameters ensure the board boots and works without official board files.
@@ -212,7 +209,8 @@ set wrapper_file [make_wrapper -files $bd_file -top]
 add_files -norecurse $wrapper_file
 
 set_property top pynq_z2_system_wrapper [current_fileset]
-update_compile_order -fileset sources_1
+
+puts "  Current top module: [get_property top [current_fileset]]"
 
 puts "  ✓ Block Design created: $BD_NAME"
 puts "    AXI GPIO fault register base address:"

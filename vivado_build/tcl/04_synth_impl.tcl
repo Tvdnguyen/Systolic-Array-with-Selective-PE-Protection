@@ -13,7 +13,7 @@ file mkdir $OUT_DIR
 # ── Synthesis ─────────────────────────────────────────────────
 # Ensure correct top module before synthesis
 set_property top pynq_z2_system_wrapper [current_fileset]
-update_compile_order -fileset sources_1
+puts "  Top module for synthesis: [get_property top [current_fileset]]"
 
 if {[get_runs -quiet synth_1] != ""} {
     reset_run synth_1
