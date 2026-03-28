@@ -23,40 +23,31 @@ create_project $PROJ_NAME $PROJ_DIR -part $PART
 # set_property board_part tul.com.tw:pynq-z2:part0:1.0 [current_project]
 set_property target_language Verilog [current_project]
 
-# ── Add original RTL sources (from parent directory) ─────────
-add_files [list \
-    "$SRC_DIR/pe.v"            \
-    "$SRC_DIR/pe_unpipelined.v"\
-    "$SRC_DIR/counter.v"       \
-    "$SRC_DIR/mem_read_m0.sv"  \
-    "$SRC_DIR/mem_read_m1.sv"  \
-    "$SRC_DIR/mem_write.sv"    \
-    "$SRC_DIR/pipe.sv"         \
-]
-
-# ── Add new protected RTL (build/rtl) ────────────────────────
-# OS protection wrappers
-add_files [list \
+# ── Add RTL sources (from build/rtl) ──────────────────────────
+set rtl_files [list \
+    "$BUILD_DIR/rtl/pe.v"                \
+    "$BUILD_DIR/rtl/pe_unpipelined.v"    \
+    "$BUILD_DIR/rtl/counter.v"           \
+    "$BUILD_DIR/rtl/mem_read_m0.sv"      \
+    "$BUILD_DIR/rtl/mem_read_m1.sv"      \
+    "$BUILD_DIR/rtl/mem_write.sv"        \
+    "$BUILD_DIR/rtl/pipe.sv"             \
+    "$BUILD_DIR/rtl/systolic.sv"         \
     "$BUILD_DIR/rtl/pe_dmr.v"            \
     "$BUILD_DIR/rtl/pe_tmr.v"            \
-]
-# WS PE variants
-add_files [list \
     "$BUILD_DIR/rtl/pe_ws.v"             \
     "$BUILD_DIR/rtl/pe_ws_dmr.v"         \
     "$BUILD_DIR/rtl/pe_ws_tmr.v"         \
-]
-# IS PE variants
-add_files [list \
     "$BUILD_DIR/rtl/pe_is.v"             \
     "$BUILD_DIR/rtl/pe_is_dmr.v"         \
     "$BUILD_DIR/rtl/pe_is_tmr.v"         \
-]
-# Controller & AXI wrapper
-add_files [list \
+    "$BUILD_DIR/rtl/mm.sv"               \
+    "$BUILD_DIR/rtl/mm_axi.v"            \
     "$BUILD_DIR/rtl/mm_protected.sv"     \
     "$BUILD_DIR/rtl/mm_protected_axi.v"  \
 ]
+
+add_files $rtl_files
 
 # ── Add generated systolic_protected.sv ──────────────────────
 set gen_file "$BUILD_DIR/generated/systolic_protected.sv"
