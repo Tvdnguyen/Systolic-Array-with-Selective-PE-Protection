@@ -181,7 +181,8 @@ w ""
 w "// ── DMR fault flag collection ─────────────────────────────"
 if {$num_dmr > 0} {
     foreach id $dmr_list { w "wire fault_${id};" }
-    set terms [lmap id $dmr_list { set _ "fault_${id}" }]
+    set terms {}
+    foreach id $dmr_list { lappend terms "fault_${id}" }
     w "assign fault_flag = [join $terms \" | \"];"
 } else {
     w "assign fault_flag = 1'b0; // No DMR PEs in this configuration"
