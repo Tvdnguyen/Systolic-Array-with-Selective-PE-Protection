@@ -1,0 +1,18 @@
+RES row=0 data=41
+RES row=0 data=31
+RES row=1 data=39
+RES row=0 data=31
+RES row=1 data=36
+RES row=2 data=36
+RES row=0 data=41
+RES row=1 data=45
+RES row=2 data=39
+RES row=3 data=32
+RES row=1 data=48
+RES row=2 data=34
+RES row=3 data=31
+RES row=2 data=35
+RES row=3 data=38
+RES row=3 data=43
+SIM_DONE
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_all_ws_N4.sv:75: $finish called at 286000 (1ps)

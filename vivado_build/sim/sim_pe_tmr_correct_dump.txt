@@ -1,0 +1,5 @@
+PASS: TMR normal out_data=0 (no fault)
+PASS: TMR majority corrects pe_C fault: out_data=0 (correct)
+PASS: TMR correct output after fault removal
+PASS: pe_tmr all tests
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_tmr.v:71: $finish called at 146000 (1ps)

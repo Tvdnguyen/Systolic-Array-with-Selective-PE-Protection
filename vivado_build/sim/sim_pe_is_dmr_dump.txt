@@ -1,0 +1,4 @@
+PASS: IS_DMR no error_flag in normal operation
+PASS: IS_DMR error_flag raised on fault
+PASS: pe_is_dmr all tests
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_is_dmr.v:34: $finish called at 106000 (1ps)

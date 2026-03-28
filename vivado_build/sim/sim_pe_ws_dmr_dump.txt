@@ -1,0 +1,4 @@
+PASS: WS_DMR no error_flag in normal operation
+PASS: WS_DMR error_flag raised on fault injection
+PASS: pe_ws_dmr all tests
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_ws_dmr.v:45: $finish called at 106000 (1ps)

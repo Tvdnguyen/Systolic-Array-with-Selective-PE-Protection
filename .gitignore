@@ -1,7 +1,10 @@
-vivado*
-*.swp
-*.swo
-overlay/tutorial
-a.out
-*.mem
-*.vcd
+# Ignore everything in the root
+/*
+
+# Do not ignore these specific folders and files
+!/vivado_build/
+!/Model/
+!/SYSTEM_ARCHITECTURE.md
+!/README.md
+!/push_changes.sh
+!/.gitignore

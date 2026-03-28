@@ -1,0 +1,6 @@
+RES row=0 data=28 cnt=0
+RES row=0 data=40 cnt=1
+RES row=1 data=22 cnt=0
+RES row=1 data=25 cnt=1
+SIM_DONE
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_matmul_N2.sv:103: $finish called at 166000 (1ps)

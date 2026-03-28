@@ -1,0 +1,3 @@
+PASS: WS_TMR majority corrects pe_ws_C fault: out=20
+PASS: pe_ws_tmr all tests
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_ws_tmr.v:38: $finish called at 106000 (1ps)

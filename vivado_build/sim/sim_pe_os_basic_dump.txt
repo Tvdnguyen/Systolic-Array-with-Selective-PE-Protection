@@ -1,0 +1,3 @@
+PASS: pe_os multi-MAC sum=41
+PASS: pe_os all tests
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_os.v:105: $finish called at 146000 (1ps)

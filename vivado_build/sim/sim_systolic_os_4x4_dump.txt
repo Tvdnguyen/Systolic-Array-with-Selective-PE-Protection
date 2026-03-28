@@ -1,0 +1,16 @@
+OUT row=0 data=28 valid=001 col_m0=2
+OUT row=0 data=32 valid=011 col_m0=0
+OUT row=1 data=105 valid=011
+OUT row=0 data=36 valid=111 col_m0=1
+OUT row=1 data=120 valid=111
+OUT row=2 data=231 valid=111
+OUT row=1 data=81 valid=110
+OUT row=2 data=192 valid=110
+OUT row=2 data=153 valid=100
+OUT row=0 data=84 valid=001 col_m0=2
+OUT row=0 data=96 valid=011 col_m0=0
+OUT row=1 data=210 valid=011
+INFO: Expected C[0][2]=18, C[1][2]=54, C[2][2]=90 (row dot products)
+INFO: Expected C[0][0]=30, C[1][0]=84, C[2][0]=138
+PASS: systolic_os simulation completed (check OUT lines vs expected)
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_systolic_os.v:108: $finish called at 236000 (1ps)

@@ -1,0 +1,5 @@
+PASS: DMR no spurious error_flag in normal operation
+PASS: DMR error_flag correctly raised on fault injection
+PASS: DMR error_flag cleared after fault removal
+PASS: pe_dmr all tests
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_dmr.v:80: $finish called at 206000 (1ps)

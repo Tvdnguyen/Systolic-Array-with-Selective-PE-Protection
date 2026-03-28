@@ -1,0 +1,15 @@
+OUT cycle=2 data=0 valid=0
+OUT cycle=3 data=0 valid=0
+OUT cycle=4 data=0 valid=0
+OUT cycle=5 data=0 valid=0
+OUT cycle=6 data=21 valid=1
+OUT cycle=7 data=35 valid=1
+OUT cycle=8 data=14 valid=1
+OUT cycle=9 data=28 valid=1
+OUT cycle=10 data=0 valid=0
+OUT cycle=11 data=0 valid=0
+OUT cycle=12 data=0 valid=0
+PASS: pe_ws output stream captured (compare with golden_model.py)
+OUT cycle=13 data=0 valid=0
+OUT cycle=14 data=0 valid=0
+/Users/springbaby/Documents/Nguyen/PHD/EXP/DNN_verification/SystolicArray_FPGA_master_protection/vivado_build/sim/tb_pe_ws.v:62: $finish called at 155000 (1ps)
