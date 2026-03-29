@@ -26,7 +26,6 @@ set_property target_language Verilog [current_project]
 # ── Add RTL sources (from build/rtl) ──────────────────────────
 set rtl_files [list \
     "$BUILD_DIR/rtl/pe.v"                \
-    "$BUILD_DIR/rtl/pe_unpipelined.v"    \
     "$BUILD_DIR/rtl/counter.v"           \
     "$BUILD_DIR/rtl/mem_read_m0.sv"      \
     "$BUILD_DIR/rtl/mem_read_m1.sv"      \

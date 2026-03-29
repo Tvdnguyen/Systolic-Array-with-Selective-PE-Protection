@@ -220,13 +220,10 @@ set_property top pynq_z2_system_wrapper [current_fileset]
 puts "  Current top module: [get_property top [current_fileset]]"
 
 # ========== DEBUG: Print generated wrapper code ==========
-set vfile [glob -nocomplain "[get_property DIRECTORY [current_project]]/**/*.gen/**/pynq_z2_system.v"]
-if {[llength $vfile] == 0} {
-    set vfile [glob -nocomplain "[get_property DIRECTORY [current_project]]/**/pynq_z2_system.v"]
-}
-if {[llength $vfile] > 0} {
+set bd_vfile "[get_property DIRECTORY [current_project]]/mm_protected_system.gen/sources_1/bd/pynq_z2_system/synth/pynq_z2_system.v"
+if {[file exists $bd_vfile]} {
     puts "\n====== DEBUG: FIRST 30 LINES OF pynq_z2_system.v ======"
-    set f [open [lindex $vfile 0] r]
+    set f [open $bd_vfile r]
     set idx 1
     while {[gets $f line] >= 0 && $idx <= 30} {
         puts [format "%02d: %s" $idx $line]
@@ -234,6 +231,8 @@ if {[llength $vfile] > 0} {
     }
     close $f
     puts "=======================================================\n"
+} else {
+    puts "\n====== DEBUG: FILE NOT FOUND: $bd_vfile ======\n"
 }
 # =========================================================
 
