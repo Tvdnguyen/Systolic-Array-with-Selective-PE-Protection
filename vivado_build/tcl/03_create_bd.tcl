@@ -219,6 +219,24 @@ set_property top pynq_z2_system_wrapper [current_fileset]
 
 puts "  Current top module: [get_property top [current_fileset]]"
 
+# ========== DEBUG: Print generated wrapper code ==========
+set vfile [glob -nocomplain "[get_property DIRECTORY [current_project]]/**/*.gen/**/pynq_z2_system.v"]
+if {[llength $vfile] == 0} {
+    set vfile [glob -nocomplain "[get_property DIRECTORY [current_project]]/**/pynq_z2_system.v"]
+}
+if {[llength $vfile] > 0} {
+    puts "\n====== DEBUG: FIRST 30 LINES OF pynq_z2_system.v ======"
+    set f [open [lindex $vfile 0] r]
+    set idx 1
+    while {[gets $f line] >= 0 && $idx <= 30} {
+        puts [format "%02d: %s" $idx $line]
+        incr idx
+    }
+    close $f
+    puts "=======================================================\n"
+}
+# =========================================================
+
 puts "  ✓ Block Design created: $BD_NAME"
 puts "    AXI GPIO fault register base address:"
 foreach cell [get_bd_cells axi_gpio_fault] {
