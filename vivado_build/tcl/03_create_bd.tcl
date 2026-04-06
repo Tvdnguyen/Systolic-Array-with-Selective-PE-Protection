@@ -215,8 +215,10 @@ generate_target all $bd_file
 
 # ── Patch generated Verilog: remove OS-injected junk lines ────
 # On this server, `sed` emits a libselinux warning that gets
-# embedded in the generated pynq_z2_system.v, breaking Synthesis.
-# We scrub any line that is not a // comment, blank, or valid Verilog.
+# embedded into the generated pynq_z2_system.v header, breaking Synthesis.
+# The junk looks like:    sed:
+#                          //         /CMC/.../libselinux...
+# We scrub any bare "word:" line that is NOT a valid Verilog/comment line.
 set synth_vfile "[get_property DIRECTORY [current_project]]/mm_protected_system.gen/sources_1/bd/pynq_z2_system/synth/pynq_z2_system.v"
 if {[file exists $synth_vfile]} {
     puts "  Patching $synth_vfile ..."
@@ -226,14 +228,13 @@ if {[file exists $synth_vfile]} {
     set clean {}
     foreach ln $lines {
         set stripped [string trim $ln]
-        # Keep: blank lines, // comments, and any valid Verilog (starts with `, (, *, letter, digit, etc.)
-        # Drop: bare shell-message lines like "sed:" "sed)" or lines starting with absolute paths
-        if {[regexp {^//} $stripped] ||
-            $stripped eq "" ||
-            [regexp {^[`(*\\$a-zA-Z0-9_]} $stripped]} {
-            lappend clean $ln
+        # DROP lines that are a bare shell message: "word:" or "word)" with no spaces
+        # These are injected OS warnings (e.g., "sed:" from libselinux).
+        # Valid Verilog never starts with a bare word+colon at column 0 in a header.
+        if {[regexp {^[a-zA-Z][a-zA-Z0-9_]*[:\)]\s*$} $stripped]} {
+            puts "    STRIPPED junk line: >>$ln<<"
         } else {
-            puts "    STRIPPED junk line: $ln"
+            lappend clean $ln
         }
     }
     set fout [open $synth_vfile w]
