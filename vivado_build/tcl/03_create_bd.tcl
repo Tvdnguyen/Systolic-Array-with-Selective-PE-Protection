@@ -212,6 +212,35 @@ save_bd_design
 # ── Generate HDL wrapper and set as Top ───────────────────────
 set bd_file [get_files pynq_z2_system.bd]
 generate_target all $bd_file
+
+# ── Patch generated Verilog: remove OS-injected junk lines ────
+# On this server, `sed` emits a libselinux warning that gets
+# embedded in the generated pynq_z2_system.v, breaking Synthesis.
+# We scrub any line that is not a // comment, blank, or valid Verilog.
+set synth_vfile "[get_property DIRECTORY [current_project]]/mm_protected_system.gen/sources_1/bd/pynq_z2_system/synth/pynq_z2_system.v"
+if {[file exists $synth_vfile]} {
+    puts "  Patching $synth_vfile ..."
+    set fin  [open $synth_vfile r]
+    set lines [split [read $fin] "\n"]
+    close $fin
+    set clean {}
+    foreach ln $lines {
+        set stripped [string trim $ln]
+        # Keep: blank lines, // comments, and any valid Verilog (starts with `, (, *, letter, digit, etc.)
+        # Drop: bare shell-message lines like "sed:" "sed)" or lines starting with absolute paths
+        if {[regexp {^//} $stripped] ||
+            $stripped eq "" ||
+            [regexp {^[`(*\\$a-zA-Z0-9_]} $stripped]} {
+            lappend clean $ln
+        } else {
+            puts "    STRIPPED junk line: $ln"
+        }
+    }
+    set fout [open $synth_vfile w]
+    puts -nonewline $fout [join $clean "\n"]
+    close $fout
+    puts "  ✓ pynq_z2_system.v patched successfully."
+}
 set wrapper_file [make_wrapper -files $bd_file -top]
 add_files -norecurse $wrapper_file
 
