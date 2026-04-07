@@ -247,7 +247,12 @@ add_files -norecurse $wrapper_file
 
 set_property top pynq_z2_system_wrapper [current_fileset]
 
-puts "  Current top module: [get_property top [current_fileset]]"
+# Lock source management AFTER all files are indexed.
+# This prevents launch_runs from calling update_compile_order internally,
+# which would override our top module back to pe_is_tmr.
+set_property source_mgmt_mode DisplayOnly [current_project]
+
+puts "  Top/Mode locked: top=[get_property top [current_fileset]]  mode=[get_property source_mgmt_mode [current_project]]"
 
 # ========== DEBUG: Print generated wrapper code ==========
 set bd_vfile "[get_property DIRECTORY [current_project]]/mm_protected_system.gen/sources_1/bd/pynq_z2_system/synth/pynq_z2_system.v"

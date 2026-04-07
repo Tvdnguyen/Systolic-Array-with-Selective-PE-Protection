@@ -11,14 +11,11 @@ set OUT_DIR    "$BUILD_DIR/output"
 file mkdir $OUT_DIR
 
 # ── Synthesis ─────────────────────────────────────────────────
-if {[get_runs -quiet synth_1] != ""} { reset_run synth_1 }
-if {[get_runs -quiet impl_1]  != ""} { reset_run impl_1  }
-
-# Lock source management: prevents Vivado from calling update_compile_order
-# internally during launch_runs, which would override our top setting.
-set_property source_mgmt_mode DisplayOnly [current_project]
-set_property top pynq_z2_system_wrapper [current_fileset]
+# source_mgmt_mode was set to DisplayOnly in 03_create_bd.tcl (after indexing).
+# Top was set to pynq_z2_system_wrapper in 03_create_bd.tcl.
+# Confirm here:
 puts "  Top module (fileset): [get_property top [current_fileset]]"
+puts "  Source mgmt mode    : [get_property source_mgmt_mode [current_project]]"
 
 puts "  [clock format [clock seconds] -format {%H:%M:%S}]  Launching synthesis..."
 launch_runs synth_1 -jobs 4
