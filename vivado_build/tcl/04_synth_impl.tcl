@@ -11,13 +11,18 @@ set OUT_DIR    "$BUILD_DIR/output"
 file mkdir $OUT_DIR
 
 # ── Synthesis ─────────────────────────────────────────────────
-# Ensure correct top module before synthesis
-set_property top pynq_z2_system_wrapper [current_fileset]
-puts "  Top module for synthesis: [get_property top [current_fileset]]"
-
 if {[get_runs -quiet synth_1] != ""} {
     reset_run synth_1
 }
+
+# Set top AFTER reset_run (reset_run clears the run's top property)
+set_property top pynq_z2_system_wrapper [current_fileset]
+set_property top pynq_z2_system_wrapper [get_runs synth_1]
+set_property top pynq_z2_system_wrapper [get_runs impl_1]
+puts "  Top module (fileset)  : [get_property top [current_fileset]]"
+puts "  Top module (synth_1)  : [get_property top [get_runs synth_1]]"
+puts "  Top module (impl_1)   : [get_property top [get_runs impl_1]]"
+
 puts "  [clock format [clock seconds] -format {%H:%M:%S}]  Launching synthesis..."
 launch_runs synth_1 -jobs 4
 wait_on_run synth_1
