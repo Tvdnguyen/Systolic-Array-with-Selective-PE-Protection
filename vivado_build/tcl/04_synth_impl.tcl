@@ -10,13 +10,16 @@ set BUILD_DIR  [file normalize "$SCRIPT_DIR/.."]
 set OUT_DIR    "$BUILD_DIR/output"
 file mkdir $OUT_DIR
 
-# ── Synthesis ─────────────────────────────────────────────────
-# source_mgmt_mode was set to DisplayOnly in 03_create_bd.tcl (after indexing).
-# Top was set to pynq_z2_system_wrapper in 03_create_bd.tcl.
-# Confirm here:
-puts "  Top module (fileset): [get_property top [current_fileset]]"
-puts "  Source mgmt mode    : [get_property source_mgmt_mode [current_project]]"
+# ── Confirm top module before synthesis ──────────────────────
+# Top was set in 03_create_bd.tcl. With only dataflow-relevant RTL files
+# added in 02_create_project.tcl, update_compile_order should have
+# auto-detected pynq_z2_system_wrapper as top already.
+set_property top pynq_z2_system_wrapper [current_fileset]
+puts "  Top module (fileset)    : [get_property top [current_fileset]]"
+puts "  Source mgmt mode        : [get_property source_mgmt_mode [current_project]]"
 
+
+# ── Synthesis ─────────────────────────────────────────────────
 puts "  [clock format [clock seconds] -format {%H:%M:%S}]  Launching synthesis..."
 launch_runs synth_1 -jobs 4
 wait_on_run synth_1
