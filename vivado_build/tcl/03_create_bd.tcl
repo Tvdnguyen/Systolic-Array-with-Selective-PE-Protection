@@ -247,10 +247,21 @@ add_files -norecurse $wrapper_file
 
 set_property top pynq_z2_system_wrapper [current_fileset]
 
-# Lock source management AFTER all files are indexed.
-# This prevents launch_runs from calling update_compile_order internally,
-# which would override our top module back to pe_is_tmr.
+# Step 1: Build the compile order WITH source_mgmt_mode=All so file manager
+#          indexes all HDL modules (incl. mm_protected_axi).
+set_property source_mgmt_mode All [current_project]
+update_compile_order -fileset sources_1
+
+# Step 2: Override the auto-detected top back to our wrapper.
+set_property top pynq_z2_system_wrapper [current_fileset]
+
+# Step 3: Lock to DisplayOnly so launch_runs won't auto-detect top again.
 set_property source_mgmt_mode DisplayOnly [current_project]
+
+# Step 4: save_project — bakes the compile order (incl. mm_protected_axi 
+#          module mapping) into the .xpr file on disk.
+# OOC synthesis subprocesses re-open this .xpr and need the mapping present.
+save_project
 
 puts "  Top/Mode locked: top=[get_property top [current_fileset]]  mode=[get_property source_mgmt_mode [current_project]]"
 
