@@ -14,7 +14,9 @@ file mkdir $OUT_DIR
 if {[get_runs -quiet synth_1] != ""} { reset_run synth_1 }
 if {[get_runs -quiet impl_1]  != ""} { reset_run impl_1  }
 
-# Set top AFTER reset_run
+# Lock source management: prevents Vivado from calling update_compile_order
+# internally during launch_runs, which would override our top setting.
+set_property source_mgmt_mode DisplayOnly [current_project]
 set_property top pynq_z2_system_wrapper [current_fileset]
 puts "  Top module (fileset): [get_property top [current_fileset]]"
 
@@ -26,16 +28,6 @@ if {[get_property PROGRESS [get_runs synth_1]] != "100%"} {
     error "ERROR: Synthesis failed. Check vivado.log for details."
 }
 
-# ── Diagnostics: open synthesized design and check top ────────
-set proj_dir [get_property DIRECTORY [current_project]]
-set synth_dcp [glob -nocomplain "$proj_dir/mm_protected_system.runs/synth_1/*.dcp"]
-puts "  Synthesis checkpoint(s): $synth_dcp"
-if {[llength $synth_dcp] > 0} {
-    open_run synth_1 -name synth_1
-    puts "  Synthesized top: [get_property TOP [current_design]]"
-    puts "  Top-level ports: [join [get_ports] {, }]"
-    close_design
-}
 puts "  ✓ Synthesis complete."
 
 # ── Implementation + Bitstream in one run ────────────────────
