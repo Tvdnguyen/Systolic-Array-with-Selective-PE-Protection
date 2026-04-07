@@ -7,7 +7,7 @@
 
 set SCRIPT_DIR  [file dirname [file normalize [info script]]]
 set BUILD_DIR   [file normalize "$SCRIPT_DIR/.."]
-set SRC_DIR     [file normalize "$BUILD_DIR/..\"]   ;# original source
+set SRC_DIR     [file normalize "$BUILD_DIR/.."]   ;# original source
 set PROJ_DIR    "$BUILD_DIR/project"
 set PROJ_NAME   "mm_protected_system"
 set PART        "xc7z020clg400-1"                  ;# PYNQ-Z2
