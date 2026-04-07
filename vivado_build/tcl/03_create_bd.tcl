@@ -97,8 +97,13 @@ set_property -dict [list \
 # ─────────────────────────────────────────────────────────────
 # 3. mm_protected_axi (our systolic array, added as RTL module)
 # ─────────────────────────────────────────────────────────────
-# Force Vivado to re-index all source files so it can resolve mm_protected_axi
+# IMPORTANT: mm_protected_axi is the current top-level module.
+# Vivado refuses to use the top-level module as a BD Module Reference
+# (circular dependency). Temporarily change top to mm_protected before
+# calling create_bd_cell, then restore after make_wrapper.
 update_compile_order -fileset sources_1
+set_property top mm_protected [current_fileset]
+puts "  Temp top (before BD cell): [get_property top [current_fileset]]"
 create_bd_cell -type module -reference mm_protected_axi mm_eval
 
 set_property -dict [list \
