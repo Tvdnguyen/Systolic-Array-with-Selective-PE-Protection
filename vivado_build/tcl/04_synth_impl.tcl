@@ -10,14 +10,19 @@ set BUILD_DIR  [file normalize "$SCRIPT_DIR/.."]
 set OUT_DIR    "$BUILD_DIR/output"
 file mkdir $OUT_DIR
 
-# ── Confirm top module before synthesis ──────────────────────
-# Top was set in 03_create_bd.tcl. With only dataflow-relevant RTL files
-# added in 02_create_project.tcl, update_compile_order should have
-# auto-detected pynq_z2_system_wrapper as top already.
+# ── Lock hierarchy before synthesis ──────────────────────────
+# CRITICAL: in 'All' (auto) mode, Vivado's launch_runs calls
+# update_compile_order and may override our top with mm_protected_axi
+# (CRITICAL WARNING filemgmt 20-742 in run log).
+# Vivado itself recommends: set_property source_mgmt_mode None
+# to switch to Manual Compile Order, preventing any further auto-updates.
 set_property top pynq_z2_system_wrapper [current_fileset]
+set_property source_mgmt_mode None [current_project]
 puts "  Top module (fileset)    : [get_property top [current_fileset]]"
-puts "  Source mgmt mode        : [get_property source_mgmt_mode [current_project]]"
+puts "  Source mgmt mode → None (Manual Compile Order, top locked)"
 
+# Reset synth_1 to clear any stale state from previous partial runs
+reset_run synth_1
 
 # ── Synthesis ─────────────────────────────────────────────────
 puts "  [clock format [clock seconds] -format {%H:%M:%S}]  Launching synthesis..."
@@ -27,6 +32,7 @@ wait_on_run synth_1
 if {[get_property PROGRESS [get_runs synth_1]] != "100%"} {
     error "ERROR: Synthesis failed. Check vivado.log for details."
 }
+
 
 puts "  ✓ Synthesis complete."
 

@@ -222,31 +222,66 @@ generate_target all $bd_file
 # On this server, `sed` emits a libselinux warning that gets
 # embedded into the generated pynq_z2_system.v header, breaking Synthesis.
 # The junk looks like:    sed:
-#                          //         /CMC/.../libselinux...
+# ── Patch the libselinux-injected junk from Verilog outputs ──
+# The OS's libselinux injects lines like:
+#    /CMC/tools/.../libselinux.so.1: no version information...
+#    sed:
+# into generated Verilog files starting at line 6, before the module.
 # We scrub any bare "word:" line that is NOT a valid Verilog/comment line.
-set synth_vfile "[get_property DIRECTORY [current_project]]/mm_protected_system.gen/sources_1/bd/pynq_z2_system/synth/pynq_z2_system.v"
-if {[file exists $synth_vfile]} {
-    puts "  Patching $synth_vfile ..."
-    set fin  [open $synth_vfile r]
+
+proc patch_verilog_file {vfile} {
+    if {![file exists $vfile]} { return }
+    puts "  Patching $vfile ..."
+    set fin  [open $vfile r]
     set lines [split [read $fin] "\n"]
     close $fin
     set clean {}
     foreach ln $lines {
         set stripped [string trim $ln]
-        # DROP lines that are a bare shell message: "word:" or "word)" with no spaces
-        # These are injected OS warnings (e.g., "sed:" from libselinux).
-        # Valid Verilog never starts with a bare word+colon at column 0 in a header.
         if {[regexp {^[a-zA-Z][a-zA-Z0-9_]*[:\)]\s*$} $stripped]} {
             puts "    STRIPPED junk line: >>$ln<<"
         } else {
             lappend clean $ln
         }
     }
-    set fout [open $synth_vfile w]
+    set fout [open $vfile w]
     puts -nonewline $fout [join $clean "\n"]
     close $fout
-    puts "  ✓ pynq_z2_system.v patched successfully."
+    puts "  ✓ Patched: [file tail $vfile]"
 }
+
+set proj_gen "[get_property DIRECTORY [current_project]]/mm_protected_system.gen/sources_1/bd/pynq_z2_system"
+
+# Patch the SYNTH version (used by synthesis)
+patch_verilog_file "$proj_gen/synth/pynq_z2_system.v"
+
+# Patch the SIM version (triggers CRITICAL WARNING HDL 9-1206 during impl launch)
+patch_verilog_file "$proj_gen/sim/pynq_z2_system.v"
+
+# Patch the mm_eval_0 sim netlist (also has sed: injection)
+set mm_eval_sim_dir "$proj_gen/ip/pynq_z2_system_mm_eval_0"
+patch_verilog_file "$mm_eval_sim_dir/pynq_z2_system_mm_eval_0_sim_netlist.v"
+# VHDL sim netlist — patch "sed)" or "sed:" injection
+
+if {[file exists "$mm_eval_sim_dir/pynq_z2_system_mm_eval_0_sim_netlist.vhdl"]} {
+    set fin [open "$mm_eval_sim_dir/pynq_z2_system_mm_eval_0_sim_netlist.vhdl" r]
+    set lines [split [read $fin] "\n"]
+    close $fin
+    set clean {}
+    foreach ln $lines {
+        set stripped [string trim $ln]
+        if {[regexp {^[a-zA-Z][a-zA-Z0-9_]*[:\)]\s*$} $stripped]} {
+            puts "    STRIPPED junk line (vhdl): >>$ln<<"
+        } else {
+            lappend clean $ln
+        }
+    }
+    set fout [open "$mm_eval_sim_dir/pynq_z2_system_mm_eval_0_sim_netlist.vhdl" w]
+    puts -nonewline $fout [join $clean "\n"]
+    close $fout
+    puts "  ✓ Patched: pynq_z2_system_mm_eval_0_sim_netlist.vhdl"
+}
+
 set wrapper_file [make_wrapper -files $bd_file -top]
 add_files -norecurse $wrapper_file
 
